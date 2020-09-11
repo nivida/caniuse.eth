@@ -1,8 +1,10 @@
 package runner
 
-/*import (
-	"os"
-)*/
+import (
+	"log"
+
+	"github.com/nivida/eth-rpc-tester/provider"
+)
 
 type Runner struct {
 	
@@ -13,7 +15,19 @@ func New() (runner *Runner) {
 }
 
 func (r *Runner) Start() {
-	println("Started")	
+	var config provider.Config;
+	config.URL = "ws://localhost:7545"
+	config.Origin = "http://localhost/"
+
+	provider, err := provider.New(&config)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	println("Started")
+
+	provider.Close()
 }
 
 func (r *Runner) Stop() {
