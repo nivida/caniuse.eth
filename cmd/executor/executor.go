@@ -12,14 +12,17 @@ type Run struct {
 }
 
 type Executor struct {
-	run *[]Run
+	run []Run
 }
 
-func New(methods []Run) (executor *Executor) {
-	return new(Executor)
+func New(runs []Run) (executor *Executor) {
+	e := new(Executor)
+	e.run = runs
+
+	return e
 }
 
-func (r *Executor) Start() {
+func (e *Executor) Start() {
 	var config provider.Config;
 	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
@@ -28,12 +31,15 @@ func (r *Executor) Start() {
 
 	log.Println("Started")
 
-	// TODO: Use Array of "Runs"
+	for _, s := range e.run {
+		log.Println(p.Send(s.Method, s.Params...))
+	}
+
 	response := p.Send("eth_getBlockByNumber", "latest", true)
 
 	log.Println(response)
 }
 
-func (r *Executor) Stop() {
+func (e *Executor) Stop() {
 
 }
