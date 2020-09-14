@@ -4,30 +4,28 @@ import (
 	"github.com/nivida/eth-rpc-tester/provider"
 )
 
-type Run struct {
+type Job struct {
 	Method string
 	Params []interface{}
 }
 
 type Worker struct {
-	run []Run
+	jobs <-chan Job
+	results chan<- interface{}
 	provider *provider.Provider
 }
 
-func New(runs []Run, config *provider.Config) (worker *Worker) {
+func New(config *provider.Config, jobs <-chan Job, results chan<- interface{}) (worker *Worker) {
 	w := new(Worker)
-	w.run = runs
+	w.jobs = jobs
+	w.results = results
 	w.provider = provider.New(config)
 
 	return w
 }
 
-func (w *Worker) Start(c chan []interface{}) {
-	responses := make([]interface{}, len(w.run))
-
-	for i, s := range w.run {
-		responses[i] = w.provider.Send(s.Method, s.Params...)
+func (w *Worker) Start() {
+	for s := range w.jobs {
+		w.results <- w.provider.Send(s.Method, s.Params...)
 	}
-	
-	c <- responses
 }
