@@ -24,12 +24,14 @@ func New(runs []Run, config *provider.Config) (worker *Worker) {
 	return w
 }
 
-func (w *Worker) Start() {
-	for _, s := range w.run {
-		log.Println(w.provider.Send(s.Method, s.Params...))
+func (w *Worker) Start(c chan []interface{}) {
+	responses := make([]interface{}, len(w.run))
+
+	for i, s := range w.run {
+		responses[i] = w.provider.Send(s.Method, s.Params...)
 	}
-}
+	
+	log.Println(responses[0])
 
-func (w *Worker) Stop() {
-
+	c <- responses
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/nivida/eth-rpc-tester/worker"
 	"github.com/nivida/eth-rpc-tester/provider"
 )
@@ -16,6 +18,13 @@ func main () {
 	runs[1] = worker.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
 
 	worker := worker.New(runs, config)
+	c := make(chan []interface{})
 
-	worker.Start()
+	go worker.Start(c)
+
+	result := <-c;
+
+	for _, v := range result {
+		log.Println(v)
+	}
 }
