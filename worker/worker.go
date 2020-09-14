@@ -1,8 +1,6 @@
 package worker
 
 import (
-	"log"
-
 	"github.com/nivida/eth-rpc-tester/provider"
 )
 
@@ -31,7 +29,5 @@ func (w *Worker) Start(c chan []interface{}) {
 		responses[i] = w.provider.Send(s.Method, s.Params...)
 	}
 	
-	log.Println(responses[0])
-
 	c <- responses
 }
