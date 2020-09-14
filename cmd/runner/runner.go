@@ -16,18 +16,16 @@ func New() (runner *Runner) {
 
 func (r *Runner) Start() {
 	var config provider.Config;
-	config.URL = "ws://localhost:7545"
+	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
 
-	provider, err := provider.New(&config)
+	p := provider.New(&config)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Println("Started")
 
-	println("Started")
+	response := p.Send("eth_getBlockByNumber", "latest", true)
 
-	provider.Close()
+	log.Println(response)
 }
 
 func (r *Runner) Stop() {
