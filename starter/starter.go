@@ -5,11 +5,11 @@ import (
 
 	"github.com/nivida/eth-rpc-tester/worker"
 	"github.com/nivida/eth-rpc-tester/provider"
+	"github.com/nivida/eth-rpc-tester/approver"
 )
 
 // Starts the worker pipeline and will later use the Loader to get all test cases
 func Start(config *provider.Config) {
-
 	// TODO: Implement buffered loader to push one after an other into the jobs pipeline (all at once takes a bit more memory on the same time)
 	/*
 	* loader := loader.New("testcases.json")
@@ -25,9 +25,11 @@ func Start(config *provider.Config) {
 	jobs := make(chan worker.Job, 2)
 	results := make(chan interface{}, 2)
 
+	approver := approver.New(results)
+
 	// Start 2 workers
 	for w := 1; w <= 2; w++ {
-		worker := worker.New(config, jobs, results)
+		worker := worker.New(approver, config, jobs, results)
 		go worker.Start()
 	}
 
@@ -38,8 +40,11 @@ func Start(config *provider.Config) {
 
 	close(jobs)
 
-	// Print response as all of the tasks are finished
-	for i := 1; i <= len(tasks); i++ {
-		log.Println(<-results)
-	} 
+	approver.check(tasks)
+	
+	// TODO: Display report in CLI and if possible with ease on a static HTML page
+	// log.Println(approver.SuccessCount)
+	// log.Println(approver.FailureCount)
+	// log.Println(approver.FailedCases)
+	// log.Println(approver.SuccessfullCases)
 }
