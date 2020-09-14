@@ -11,12 +11,6 @@ type Provider struct {
 	client jsonrpc.RPCClient
 }
 
-/*type Request struct {
-	Method string `json:"method"`
-	Params [1]interface{} `json:"params"`
-	Id uint256 `json:"id"`
-}*/
-
 func New(c *Config) (p *Provider) {
 	p = new(Provider)
 	p.config = c
