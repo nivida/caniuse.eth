@@ -1,15 +1,21 @@
 package main
 
 import (
-	"github.com/nivida/eth-rpc-tester/cmd/executor"
+	"github.com/nivida/eth-rpc-tester/worker"
+	"github.com/nivida/eth-rpc-tester/provider"
 )
 
 func main () {
-	var runs = make([]executor.Run, 2)
-	runs[0] = executor.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
-	runs[1] = executor.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
+	config :=  new(provider.Config);
+	config.URL = "http://localhost:7545"
+	config.Origin = "http://localhost/"
 
-	executor := executor.New(runs)
 
-	executor.Start()
+	var runs = make([]worker.Run, 2)
+	runs[0] = worker.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
+	runs[1] = worker.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
+
+	worker := worker.New(runs, config)
+
+	worker.Start()
 }
