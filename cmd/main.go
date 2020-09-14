@@ -1,11 +1,15 @@
 package main
 
 import (
-	"github.com/nivida/eth-rpc-tester/cmd/runner"
+	"github.com/nivida/eth-rpc-tester/cmd/executor"
 )
 
 func main () {
-	runner := runner.New()
+	var runs = make([]executor.Run, 2)
+	runs[0] = executor.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
+	runs[1] = executor.Run{Method: "eth_getBlockByNumber", Params: []interface{} {"latest", true}}
 
-	runner.Start()
+	executor := executor.New(runs)
+
+	executor.Start()
 }

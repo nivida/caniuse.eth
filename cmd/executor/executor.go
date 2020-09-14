@@ -1,4 +1,4 @@
-package runner
+package executor
 
 import (
 	"log"
@@ -6,15 +6,20 @@ import (
 	"github.com/nivida/eth-rpc-tester/provider"
 )
 
-type Runner struct {
-	
+type Run struct {
+	Method string
+	Params []interface{}
 }
 
-func New() (runner *Runner) {
-	return new(Runner)
+type Executor struct {
+	run *[]Run
 }
 
-func (r *Runner) Start() {
+func New(methods []Run) (executor *Executor) {
+	return new(Executor)
+}
+
+func (r *Executor) Start() {
 	var config provider.Config;
 	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
@@ -23,11 +28,12 @@ func (r *Runner) Start() {
 
 	log.Println("Started")
 
+	// TODO: Use Array of "Runs"
 	response := p.Send("eth_getBlockByNumber", "latest", true)
 
 	log.Println(response)
 }
 
-func (r *Runner) Stop() {
+func (r *Executor) Stop() {
 
 }
