@@ -16,10 +16,8 @@ func main() {
 	r := runner.New(p)
 	r.Start(2) // Pass the amount of workers it should start
 
-	log.Println(r.SuccessCount)
-	log.Println(r.FailureCount)
-	log.Println(r.FailedCases)
-	log.Println(r.SuccessfullCases)
+	log.Println("Success", r.SuccessCount)
+	log.Println("Failure", r.FailureCount)
 
 	// Delegate result to UI package
 }

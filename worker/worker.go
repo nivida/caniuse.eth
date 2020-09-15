@@ -1,8 +1,6 @@
 package worker
 
 import (
-	"log"
-
 	"github.com/nivida/eth-rpc-tester/approver"
 	"github.com/nivida/eth-rpc-tester/provider"
 )
@@ -33,16 +31,15 @@ func New(p *provider.Provider, jobs chan *Job, results chan *Job) (worker *Worke
 func (w *Worker) Start() {
 	for s := range w.jobs {
 		s.Response = w.provider.Send(s.Method, s.Params...)
-		log.Println(s.Response)
-		//result, err = approver.Check(s.Response, s.Expectation)
+		result := approver.Check(s.Response, &s.Expectation)
 
-		/*if err != nil {
+		if result == false {
 			s.Successfull = false
 
 			w.results <- s
 
 			return
-		}*/
+		}
 
 		s.Successfull = true
 		w.results <- s
