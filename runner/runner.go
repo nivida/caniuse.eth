@@ -49,16 +49,20 @@ func (r *Runner) Start(config *provider.Config) {
 	}
 
 	close(jobs)
-	for i := 1; i <= len(jobs); i++ {
-		<-r.results
-		
-		// TODO: Implement assertions
-		//approver.check()
+
+	for i := 1; i <= len(tasks); i++ {
+		result := approver.check(<-r.results)
+		if result.Successfull == true {
+			r.SuccessCount++
+			append(r.SuccessfullCases, result)
+
+			continue
+		}
+
+		r.FailureCount++
+		append(r.FailedCases, result)
 	} 
 
-	
-	
-	// TODO: Display report in CLI and if possible with ease on a static HTML page
 	// log.Println(approver.SuccessCount)
 	// log.Println(approver.FailureCount)
 	// log.Println(approver.FailedCases)

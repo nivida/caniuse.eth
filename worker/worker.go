@@ -9,6 +9,8 @@ type Job struct {
 	Method string
 	Params []interface{}
 	ExpectedValue interface{}
+	Response interface{}
+	Successfull bool
 }
 
 type Worker struct {
@@ -30,6 +32,8 @@ func New(approver *Approver, config *provider.Config, jobs <-chan Job, results c
 
 func (w *Worker) Start() {
 	for s := range w.jobs {
-		w.results <- w.provider.Send(s.Method, s.Params...)
+		s.Response = w.provider.Send(s.Method, s.Params...);
+
+		w.results <- s
 	}
 }
