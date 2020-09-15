@@ -1,8 +1,6 @@
 package runner
 
 import (
-	"log"
-
 	"github.com/nivida/eth-rpc-tester/provider"
 	"github.com/nivida/eth-rpc-tester/worker"
 )
@@ -28,20 +26,15 @@ func New(p *provider.Provider) (runner *Runner) {
 }
 
 func (r *Runner) Start() {
-	log.Println("RUNNER STARTED")
-	r.startWorkers(2)
-	log.Println("WORKERS STARTED")
+	r.startWorkers(4)
 	r.passJobs()
-	log.Println("JOBS PASSED")
 	r.processTestResults()
-	log.Println("TEST RESULTS PROCESSED")
 }
 
 func (r *Runner) passJobs() {
 	r.tasks = r.getJobs()
 	// Pass one task after another into the jobs channel for our workers
 	for _, v := range *r.tasks {
-		log.Println("JOB PASSED")
 		r.Jobs <- &v
 	}
 
@@ -61,12 +54,10 @@ func (r *Runner) processTestResults() {
 		if result.Successfull == true {
 			r.SuccessCount++
 			r.SuccessfullCases = append(r.SuccessfullCases, result)
-			log.Println("SUCCESS")
 
 			continue
 		}
 
-		log.Println("ERROR")
 		r.FailureCount++
 		r.FailedCases = append(r.FailedCases, result)
 	}

@@ -22,7 +22,6 @@ type Worker struct {
 }
 
 func New(p *provider.Provider, jobs chan *Job, results chan *Job) (worker *Worker) {
-	log.Println("WORKER CREATED")
 	w := new(Worker)
 	w.jobs = jobs
 	w.results = results
