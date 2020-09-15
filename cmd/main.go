@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/nivida/eth-rpc-tester/provider"
-	"github.com/nivida/eth-rpc-tester/starter"
+	"github.com/nivida/eth-rpc-tester/runner"
 )
 
 func main () {
 	config :=  new(provider.Config);
 	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
-
-	starter.Start(config)
+	
+	r := new(Runner)
+	r.Start(config)
 }
