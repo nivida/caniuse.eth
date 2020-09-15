@@ -11,9 +11,10 @@ func main() {
 	config := new(provider.Config)
 	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
+	p := provider.New(config)
 
-	r := runner.New()
-	r.Start(config)
+	r := runner.New(p)
+	r.Start()
 
 	log.Println(r.SuccessCount)
 	log.Println(r.FailureCount)

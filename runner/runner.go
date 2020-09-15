@@ -1,6 +1,8 @@
 package runner
 
 import (
+	"log"
+
 	"github.com/nivida/eth-rpc-tester/provider"
 	"github.com/nivida/eth-rpc-tester/worker"
 )
@@ -10,54 +12,60 @@ type Runner struct {
 	FailureCount     int
 	FailedCases      []*worker.Job
 	SuccessfullCases []*worker.Job
-	Results          chan<- interface{}
-	Jobs             <-chan worker.Job
+	Results          chan *worker.Job
+	Jobs             chan *worker.Job
 	Provider         *provider.Provider
+	tasks            *[]worker.Job
 }
 
-func New(provider *provider.Provider) (runner *Runner) {
+func New(p *provider.Provider) (runner *Runner) {
 	r := new(Runner)
-	r.Provider = provider
+	r.Provider = p
 
 	return r
 }
 
 func (r *Runner) Start() {
-	r.startWorkers(2, provider)
+	log.Println("RUNNER STARTED")
+	r.startWorkers(2)
+	log.Println("WORKERS STARTED")
 	r.passJobs()
+	log.Println("JOBS PASSED")
 	r.processTestResults()
+	log.Println("TEST RESULTS PROCESSED")
 }
 
 func (r *Runner) passJobs() {
-	tasks := r.getJobs()
+	r.tasks = r.getJobs()
 
 	// Pass one task after another into the jobs channel for our workers
-	for _, v := range tasks {
-		r.jobs <- v
+	for _, v := range *r.tasks {
+		log.Println("JOB PASSED")
+		r.Jobs <- &v
 	}
 
-	close(jobs)
+	close(r.Jobs)
 }
 
 func (r *Runner) startWorkers(amount int) {
 	for w := 1; w <= amount; w++ {
-		worker := worker.New(r.Provider, jobs, r.results)
+		worker := worker.New(r.Provider, r.Jobs, r.Results)
 		go worker.Start()
 	}
 }
 
 func (r *Runner) processTestResults() {
-	for i := 1; i <= len(tasks); i++ {
-		result := <-r.results
+	for i := 1; i <= len(*r.tasks); i++ {
+		result := <-r.Results
 		if result.Successfull == true {
 			r.SuccessCount++
-			append(r.SuccessfullCases, result)
+			r.SuccessfullCases = append(r.SuccessfullCases, result)
 
 			continue
 		}
 
 		r.FailureCount++
-		append(r.FailedCases, result)
+		r.FailedCases = append(r.FailedCases, result)
 	}
 }
 
@@ -74,5 +82,5 @@ func (r *Runner) getJobs() *[]worker.Job {
 	tasks[2] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
 	tasks[3] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
 
-	return tasks
+	return &tasks
 }

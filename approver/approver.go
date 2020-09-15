@@ -1,9 +1,10 @@
 package approver
 
 type Expectation struct {
-	Value interface{}
+	Value bool
 }
 
-func check(response interface{}, expectation *Expectation) (bool, error) {
+func Check(response interface{}, expectation *Expectation) (bool, error) {
+	return true, nil
 	// DO ASSERTIONS BASED ON JOB HERE
 }
