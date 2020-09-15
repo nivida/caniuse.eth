@@ -25,11 +25,6 @@ func (r *Runner) Start(config *provider.Config) {
 	r.startWorkers(2)
 	r.passJobs()
 	r.processTestResults()
-
-	// log.Println(approver.SuccessCount)
-	// log.Println(approver.FailureCount)
-	// log.Println(approver.FailedCases)
-	// log.Println(approver.SuccessfullCases)
 }
 
 func (r *Runner) passJobs() {
