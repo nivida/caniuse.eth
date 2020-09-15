@@ -1,30 +1,30 @@
 package worker
 
 import (
-	"github.com/nivida/eth-rpc-tester/provider"
 	"github.com/nivida/eth-rpc-tester/approver"
+	"github.com/nivida/eth-rpc-tester/provider"
 )
 
 type Job struct {
-	Method string
-	Params []interface{}
+	Method        string
+	Params        []interface{}
 	ExpectedValue interface{}
-	Response interface{}
-	Successfull bool
+	Response      interface{}
+	Successfull   bool
 }
 
 type Worker struct {
-	jobs <-chan Job
-	results chan<- interface{}
+	jobs     <-chan Job
+	results  chan<- interface{}
 	provider *provider.Provider
 	approver *approver.Approver
 }
 
-func New(approver *Approver, config *provider.Config, jobs <-chan Job, results chan<- interface{}) (worker *Worker) {
+func New(approver *Approver, provider *provider.Provider, jobs <-chan Job, results chan<- interface{}) (worker *Worker) {
 	w := new(Worker)
 	w.jobs = jobs
 	w.results = results
-	w.provider = provider.New(config)
+	w.provider = provider
 	w.approver = approver
 
 	return w
@@ -32,8 +32,8 @@ func New(approver *Approver, config *provider.Config, jobs <-chan Job, results c
 
 func (w *Worker) Start() {
 	for s := range w.jobs {
-		s.Response = w.provider.Send(s.Method, s.Params...);
+		s.Response = w.provider.Send(s.Method, s.Params...)
 
-		w.results <- s
+		w.results <- approver.check(s)
 	}
 }
