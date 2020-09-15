@@ -14,7 +14,7 @@ func main() {
 	p := provider.New(config)
 
 	r := runner.New(p)
-	r.Start()
+	r.Start(2) // Pass the amount of workers it should start
 
 	log.Println(r.SuccessCount)
 	log.Println(r.FailureCount)

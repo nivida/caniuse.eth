@@ -23,12 +23,12 @@ func New(p *provider.Provider) (runner *Runner) {
 	return r
 }
 
-func (r *Runner) Start() {
+func (r *Runner) Start(amount int) {
 	r.tasks = r.getJobs()
 	r.Jobs = make(chan *worker.Job, len(*r.tasks))
 	r.Results = make(chan *worker.Job, len(*r.tasks))
 
-	r.startWorkers(2)
+	r.startWorkers(amount)
 	r.passJobs()
 	r.processTestResults()
 }
