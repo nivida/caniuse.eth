@@ -1,9 +1,9 @@
 package approver
 
-import (
-	"github.com/nivida/eth-rpc-tester/worker"
-)
+type Expectation struct {
+	Value interface{}
+}
 
-func check(job *worker.Job, reponse interface{}) *worker.Job {
+func check(response interface{}, expectation *Expectation) (bool, error) {
 	// DO ASSERTIONS BASED ON JOB HERE
 }
