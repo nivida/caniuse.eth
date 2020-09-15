@@ -21,6 +21,8 @@ type Runner struct {
 func New(p *provider.Provider) (runner *Runner) {
 	r := new(Runner)
 	r.Provider = p
+	r.Jobs = make(chan *worker.Job)
+	r.Results = make(chan *worker.Job)
 
 	return r
 }
@@ -37,7 +39,6 @@ func (r *Runner) Start() {
 
 func (r *Runner) passJobs() {
 	r.tasks = r.getJobs()
-
 	// Pass one task after another into the jobs channel for our workers
 	for _, v := range *r.tasks {
 		log.Println("JOB PASSED")
@@ -60,10 +61,12 @@ func (r *Runner) processTestResults() {
 		if result.Successfull == true {
 			r.SuccessCount++
 			r.SuccessfullCases = append(r.SuccessfullCases, result)
+			log.Println("SUCCESS")
 
 			continue
 		}
 
+		log.Println("ERROR")
 		r.FailureCount++
 		r.FailedCases = append(r.FailedCases, result)
 	}
