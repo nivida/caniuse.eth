@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"github.com/nivida/eth-rpc-tester/loader"
@@ -9,6 +10,9 @@ import (
 )
 
 func main() {
+	workers := flag.Int("w", 4, "Amount of workers to start")
+	flag.Parse()
+
 	config := new(provider.Config)
 	config.URL = "http://localhost:7545"
 	config.Origin = "http://localhost/"
@@ -16,7 +20,7 @@ func main() {
 	l := loader.New("pathToMyJson.json")
 
 	r := runner.New(p, l)
-	r.Start(2) // Pass the amount of workers it should start
+	r.Start(*workers)
 
 	log.Println("Success", r.SuccessCount)
 	log.Println("Failure", r.FailureCount)
