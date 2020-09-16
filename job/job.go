@@ -7,7 +7,7 @@ type Job struct {
 	Method      string        `json:"method"`
 	Params      []interface{} `json:"params"`
 	Expected    string        `json:"expected"`
-	Response    jsonrpc.RPCResponse
+	Response    *jsonrpc.RPCResponse
 	Successfull bool
 }
 
