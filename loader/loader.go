@@ -1,6 +1,12 @@
 package loader
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+
 	"github.com/nivida/eth-rpc-tester/job"
 )
 
@@ -21,11 +27,16 @@ func New(p string) (loader *Loader) {
 
 // GetTasks returns all the defined tests from a JSON file
 func (l *Loader) GetTasks() *[]job.Job {
-	var tasks = make([]job.Job, 4)
-	tasks[0] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
-	tasks[1] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
-	tasks[2] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
-	tasks[3] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
+	path, _ := filepath.Abs("assets/test.json")
+	jsonFile, err := os.Open(path)
 
-	return &tasks
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bytesArray, _ := ioutil.ReadAll(jsonFile)
+	var jobs job.Jobs
+	json.Unmarshal(bytesArray, &jobs)
+
+	return &jobs.Jobs
 }
