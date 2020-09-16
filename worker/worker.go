@@ -23,8 +23,8 @@ func New(p *provider.Provider, jobsPipeline chan *job.Job, resultsPipeline chan 
 
 func (w *Worker) Start() {
 	for s := range w.jobsPipeline {
-		s.Response = w.provider.Send(s.Method, s.Params...)
-		result := approver.Check(s.Response, &s.Expected)
+		s.Response = *w.provider.Send(s.Method, s.Params...)
+		result := approver.Check(&s.Response, s.Expected)
 
 		if result == false {
 			s.Successfull = false

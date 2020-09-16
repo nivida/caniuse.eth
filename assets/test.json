@@ -4,7 +4,7 @@
             "_comment": "Tests a balance transfer between two addresses",
             "method": "eth_getBalance",
             "params": ["0xfce1C2b5D6aB2C6cfE75f9D3581Cb55FBaF57968"],
-            "expected": "99",
+            "expected": "0x63",
             "stateChange": [
                 {
                     "type": "transfer",

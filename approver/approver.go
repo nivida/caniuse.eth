@@ -1,9 +1,20 @@
 package approver
 
+import (
+	"log"
+
+	"github.com/ybbus/jsonrpc"
+)
+
 // Check runs the actual test case with the given expectation of a Job
-func Check(response interface{}, expected interface{}) bool {
-	return true
-	// DO ASSERTIONS BASED ON JOB HERE
+func Check(response *jsonrpc.RPCResponse, expected string) bool {
+	returnValue, err := response.GetString()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return returnValue == expected
 }
 
 /*
