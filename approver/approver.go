@@ -1,10 +1,11 @@
 package approver
 
-type Expectation struct {
-	Value bool
-}
+import (
+	"github.com/nivida/eth-rpc-tester/job"
+)
 
-func Check(response interface{}, expectation *Expectation) bool {
+// Check runs the actual test case with the given expectation of a Job
+func Check(response interface{}, expectation *job.Expectation) bool {
 	return true
 	// DO ASSERTIONS BASED ON JOB HERE
 }

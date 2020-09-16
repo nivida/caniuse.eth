@@ -1,6 +1,8 @@
 package loader
 
-import "github.com/nivida/eth-rpc-tester/worker"
+import (
+	"github.com/nivida/eth-rpc-tester/job"
+)
 
 // TODO: Move Job struct type to loader
 
@@ -18,12 +20,12 @@ func New(p string) (loader *Loader) {
 }
 
 // GetTasks returns all the defined tests from a JSON file
-func (l *Loader) GetTasks() *[]worker.Job {
-	var tasks = make([]worker.Job, 4)
-	tasks[0] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
-	tasks[1] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
-	tasks[2] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
-	tasks[3] = worker.Job{Method: "eth_getBlockByNumber", Params: []interface{}{"latest", true}}
+func (l *Loader) GetTasks() *[]job.Job {
+	var tasks = make([]job.Job, 4)
+	tasks[0] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
+	tasks[1] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
+	tasks[2] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
+	tasks[3] = *job.New("eth_getBlockByNumber", []interface{}{"latest", true}, job.Expectation{Value: true})
 
 	return &tasks
 }

@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"github.com/nivida/eth-rpc-tester/job"
 	"github.com/nivida/eth-rpc-tester/loader"
 	"github.com/nivida/eth-rpc-tester/provider"
 	"github.com/nivida/eth-rpc-tester/worker"
@@ -10,13 +11,13 @@ import (
 type Runner struct {
 	SuccessCount     int
 	FailureCount     int
-	FailedCases      []*worker.Job
-	SuccessfullCases []*worker.Job
-	Results          chan *worker.Job
-	Jobs             chan *worker.Job
+	FailedCases      []*job.Job
+	SuccessfullCases []*job.Job
+	Results          chan *job.Job
+	Jobs             chan *job.Job
 	Provider         *provider.Provider
 	Loader           *loader.Loader
-	tasks            *[]worker.Job
+	tasks            *[]job.Job
 }
 
 // New initiates the Runner
@@ -31,8 +32,8 @@ func New(p *provider.Provider, l *loader.Loader) (runner *Runner) {
 // Start the whole test run
 func (r *Runner) Start(amount int) {
 	r.tasks = r.Loader.GetTasks()
-	r.Jobs = make(chan *worker.Job, len(*r.tasks))
-	r.Results = make(chan *worker.Job, len(*r.tasks))
+	r.Jobs = make(chan *job.Job, len(*r.tasks))
+	r.Results = make(chan *job.Job, len(*r.tasks))
 
 	r.startWorkers(amount)
 	r.passJobs()
