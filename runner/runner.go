@@ -42,6 +42,13 @@ func (r *Runner) Start(amount int) {
 
 // Pass one task after another into the jobs channel for our workers
 func (r *Runner) passJobs() {
+	/**
+	* Learning comment:
+	* range can't be used cause the for-each loop is reusing the memory location which means
+	* the used value for our workers does update and it shouldn't.
+	*
+	* Another fix for this would be to pass it by value instead of reference. Let me see.
+	**/
 	for i := 0; i < len(r.tasks); i++ {
 		r.Jobs <- &r.tasks[i]
 	}
