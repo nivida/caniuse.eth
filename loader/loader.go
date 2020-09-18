@@ -26,7 +26,7 @@ func New(p string) (loader *Loader) {
 }
 
 // GetTasks returns all the defined tests from a JSON file
-func (l *Loader) GetTasks() *[]job.Job {
+func (l *Loader) GetTasks() []job.Job {
 	path, _ := filepath.Abs("assets/test.json")
 	jsonFile, err := os.Open(path)
 
@@ -38,5 +38,5 @@ func (l *Loader) GetTasks() *[]job.Job {
 	var jobs job.Jobs
 	json.Unmarshal(bytesArray, &jobs)
 
-	return &jobs.Jobs
+	return jobs.Jobs
 }

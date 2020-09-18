@@ -17,7 +17,7 @@ type Runner struct {
 	Jobs             chan *job.Job
 	Provider         *provider.Provider
 	Loader           *loader.Loader
-	tasks            *[]job.Job
+	tasks            []job.Job
 }
 
 // New initiates the Runner
@@ -32,8 +32,8 @@ func New(p *provider.Provider, l *loader.Loader) (runner *Runner) {
 // Start the whole test run
 func (r *Runner) Start(amount int) {
 	r.tasks = r.Loader.GetTasks()
-	r.Jobs = make(chan *job.Job, len(*r.tasks))
-	r.Results = make(chan *job.Job, len(*r.tasks))
+	r.Jobs = make(chan *job.Job, len(r.tasks))
+	r.Results = make(chan *job.Job, len(r.tasks))
 
 	r.startWorkers(amount)
 	r.passJobs()
@@ -42,8 +42,8 @@ func (r *Runner) Start(amount int) {
 
 // Pass one task after another into the jobs channel for our workers
 func (r *Runner) passJobs() {
-	for _, v := range *r.tasks {
-		r.Jobs <- &v
+	for i := 0; i < len(r.tasks); i++ {
+		r.Jobs <- &r.tasks[i]
 	}
 
 	close(r.Jobs)
@@ -59,7 +59,7 @@ func (r *Runner) startWorkers(amount int) {
 
 // Process test results
 func (r *Runner) processTestResults() {
-	for i := 1; i <= len(*r.tasks); i++ {
+	for i := 1; i <= len(r.tasks); i++ {
 		result := <-r.Results
 		if result.Successfull == true {
 			r.SuccessCount++
