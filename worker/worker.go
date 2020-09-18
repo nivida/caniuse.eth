@@ -31,7 +31,7 @@ func (w *Worker) Start() {
 
 			w.resultsPipeline <- s
 
-			return
+			continue
 		}
 
 		s.Successfull = true
