@@ -1,6 +1,6 @@
 ### WIP
 
-Don't judge as long as WIP stands here. Just started to wildly architect to find a reasonable architecture. (First time architecting in Go)
+Don't judge as long as WIP stands here. Just started to wildly architect to find a reasonable architecture. 
 
 TODO's:
 
